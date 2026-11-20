@@ -1,4 +1,4 @@
-/* Jude Nasser - 202363250 - SWE 363 Assignment 1 */
+/* Jude Nasser - 202363250 - SWE 363 Assignment 3 */
 
 /* palette - change these six and the whole site changes */
 :root {
@@ -29,9 +29,11 @@ h1, h3, p, figure {
   margin: 0;
 }
 
+
 h1 { color: var(--ink); }
 h2 { color: var(--ink); }
 p  { color: var(--muted); }
+a, a:visited , body  { color: var(--accent); }
 
 h2 {
   margin-bottom: 10px;
@@ -132,6 +134,7 @@ footer h2 { text-align: center; }
 form {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
