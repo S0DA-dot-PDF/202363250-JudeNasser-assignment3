@@ -86,6 +86,26 @@ contactForm.addEventListener("submit", function (event) {
     greetingMessage.textContent = `Welcome, ${name}!`;
 });
 
+///
+const quoteElement = document.getElementById("quote");
+const quoteButton = document.getElementById("quoteButton");
+quoteButton.addEventListener("click", loadQuote);
+
+async function loadQuote() {
+  quoteElement.textContent = "Loading…";
+
+  try {
+    const response = await fetch("https://dummyjson.com/quotes/random");
+    if (!response.ok) throw new Error("Bad response");
+    const data = await response.json();
+
+    quoteElement.textContent = `"${data.quote}" — ${data.author}`;
+
+  } catch (error) {
+    quoteElement.textContent = "Sorry, we couldn't load a quote. Please try again.";
+
+  }
+}
 
 
 
