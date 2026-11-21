@@ -2,7 +2,7 @@
 
 /* palette - change these six and the whole site changes */
 :root 
-[data-theme="Light"] {
+ {
   --ink:    #242220;   /* body text soft black, not pure  */
   --paper:  #faf7f2;   /* card / box background */
   --invpaper: #271d23; 
