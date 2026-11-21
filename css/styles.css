@@ -1,7 +1,8 @@
 /* Jude Nasser - 202363250 - SWE 363 Assignment 3 */
 
 /* palette - change these six and the whole site changes */
-:root {
+:root 
+[data-theme="Light"] {
   --ink:    #242220;   /* body text soft black, not pure  */
   --paper:  #faf7f2;   /* card / box background */
   --invpaper: #271d23; 
@@ -13,7 +14,7 @@
 }
 
 /* same names, dark values. JS adds data-theme="dark" to <html> */
-[data-theme="dark"] {
+[data-theme="Dark"] {
   --ink:    #f2e7ec;
   --paper:  #271d23;
   --invpaper:  #faf7f2;   /* card / box background */
