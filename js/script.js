@@ -126,6 +126,7 @@ description.textContent = project.description;
 const image = document.createElement("img");
 image.src = project.image;
 image.alt = project.name;
+image.classList.add("cardPicture")
 
 const link = document.createElement("a");
 link.href = project.link;
