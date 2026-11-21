@@ -2,24 +2,39 @@
    Night mode button. No colours in here - this only flips the
    data-theme attribute and the CSS does the rest. */
 
+
 const toggle = document.querySelector("#themeToggle");
-const root = document.documentElement;   // this is <html>
+const root = document.documentElement;
 
-toggle.addEventListener("click", function () {
-  // getAttribute gives "dark" or null
-  const isDark = root.getAttribute("data-theme") === "dark";
+let theme = localStorage.getItem("theme") || "Light";
 
-  if (isDark) {
-    root.removeAttribute("data-theme");   // back to light
-    toggle.textContent = "Night mode";
-    toggle.setAttribute("aria-pressed", "false");
-  } else {
-    root.setAttribute("data-theme", "dark");
-    toggle.textContent = "Day mode";
-    toggle.setAttribute("aria-pressed", "true");
-  }
-  // label says what the next click does, not what mode you're in
+// Apply the theme
+function applyTheme() {
+    if (theme === "Dark") {
+        root.setAttribute("data-theme", "dark");
+    } else {
+        root.removeAttribute("data-theme");
+    }
+
+    // Update button text
+    toggle.textContent = theme === "Dark" ? "Day mode" : "Night mode";
+    // Update accessibility attribute
+    toggle.setAttribute("aria-pressed", String(theme === "Dark"));
+}
+
+// Switch between Light and Dark
+toggle.addEventListener("click", () => {
+    theme = theme === "Dark" ? "Light" : "Dark";
+
+    localStorage.setItem("theme", theme);
+
+    applyTheme();
+
+    console.log("Theme changed to:", theme);
+    document.title = "theme: " + theme + " | saved: " + localStorage.getItem("theme");
 });
+
+applyTheme();
 
 
 // assignment 2: from here and below 
@@ -70,5 +85,10 @@ contactForm.addEventListener("submit", function (event) {
     // Greet the user immediately
     greetingMessage.textContent = `Welcome, ${name}!`;
 });
+
+
+
+
+
 
 
