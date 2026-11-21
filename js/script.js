@@ -1,74 +1,125 @@
+
 /* Jude Nasser - 202363250 - SWE 363 Assignment 1
    Night mode button. No colours in here - this only flips the
-   data-theme attribute and the CSS does the rest. */
+   data-theme attribute and the CSS does the rest.
+*/
 
-const toggle = document.querySelector("#themeToggle");
-const root = document.documentElement;   // this is <html>
+import { useState, useEffect } from "react";
 
-toggle.addEventListener("click", function () {
-  // getAttribute gives "dark" or null
-  const isDark = root.getAttribute("data-theme") === "dark";
+function ThemeToggle() {
 
-  if (isDark) {
-    root.removeAttribute("data-theme");   // back to light
-    toggle.textContent = "Night mode";
-    toggle.setAttribute("aria-pressed", "false");
-  } else {
-    root.setAttribute("data-theme", "dark");
-    toggle.textContent = "Day mode";
-    toggle.setAttribute("aria-pressed", "true");
-  }
-  // label says what the next click does, not what mode you're in
-});
+    // Store the current theme
+    const [theme, setTheme] = useState(
+        localStorage.getItem("theme") || "Light"
+    );
 
+    // Save and apply the theme whenever it changes
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+    }, [theme]);
 
-// assignment 2: from here and below 
+    // Switch between Light and Dark
+    function toggleTheme() {
+        setTheme(theme === "Light" ? "Dark" : "Light");
+    }
 
-
-const contactForm = document.getElementById("contactForm");
-const nameInput = document.getElementById("name");
-const emailInput = document.getElementById("email");
-const messageInput = document.getElementById("message");
-const greetingMessage = document.getElementById("greetingMessage");
-const errorMessage = document.getElementById("errorMessage");
-
-// Greet returning users who already have a saved name
-const savedName = localStorage.getItem("name");
-
-if (savedName) {
-    greetingMessage.textContent = `Welcome back, ${savedName}!`;
-    nameInput.value = savedName;
+    return (
+        <button
+            id="themeToggle"
+            onClick={toggleTheme}
+            aria-pressed={theme === "Dark"}
+        >
+            {theme === "Light" ? "Night mode" : "Day mode"}
+        </button>
+    );
 }
 
-// Handle form submission
 
-contactForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+// Assignment 2: Contact Form
 
-    // Clear 
-    errorMessage.textContent = "";
-    greetingMessage.textContent = "";
+function ContactForm() {
 
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
-    const message = messageInput.value.trim();
+    // Retrieve the saved name
+    const savedName = localStorage.getItem("name") || "";
 
-    // Validate the fields
-    if (!name || !email || !message) {
-        errorMessage.textContent = "Please fill in all fields.";
-        return;
+    // Store form values
+    const [name, setName] = useState(savedName);
+    const [phone, setPhone] = useState("");
+    const [message, setMessage] = useState("");
+
+    // Store feedback messages
+    const [greetingMessage, setGreetingMessage] = useState(
+        savedName ? `Welcome back, ${savedName}!` : ""
+    );
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // Handle form submission
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        // Clear previous messages
+        setErrorMessage("");
+        setGreetingMessage("");
+
+        const trimmedName = name.trim();
+        const trimmedPhone = phone.trim();
+        const trimmedMessage = message.trim();
+
+        // Validate the fields
+        if (!trimmedName || !trimmedPhone || !trimmedMessage) {
+            setErrorMessage("Please fill in all fields.");
+            return;
+        }
+
+        // Validate Saudi phone number
+        if (!/^(05\d{8}|\+9665\d{8})$/.test(trimmedPhone)) {
+            setErrorMessage("Please enter a valid Saudi phone number.");
+            return;
+        }
+
+        // Save the name only after successful validation
+        localStorage.setItem("name", trimmedName);
+
+        // Greet the user immediately
+        setGreetingMessage(`Welcome, ${trimmedName}!`);
     }
 
-    if (!emailInput.validity.valid) {
-        errorMessage.textContent = "Please enter a valid email address.";
-        return;
-    }
+    return (
+        <form id="contactForm" onSubmit={handleSubmit}>
 
-    // Save the name only after successful validation
-    localStorage.setItem("name", name);
+            <label htmlFor="name">Name</label>
+            <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+            />
 
-    // Greet the user immediately
-    greetingMessage.textContent = `Welcome, ${name}!`;
-});
+            <label htmlFor="phone">Phone Number</label>
+            <input
+                id="phone"
+                type="tel"
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+                placeholder="05XXXXXXXX"
+            />
 
+            <label htmlFor="message">Message</label>
+            <textarea
+                id="message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+            />
 
+            <button type="submit">Submit</button>
+
+            <p id="greetingMessage">{greetingMessage}</p>
+            <p id="errorMessage">{errorMessage}</p>
+
+        </form>
+    );
+}
+
+export { ThemeToggle, ContactForm };
