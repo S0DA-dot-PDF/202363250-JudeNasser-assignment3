@@ -29,12 +29,9 @@ toggle.addEventListener("click", () => {
     localStorage.setItem("theme", theme);
 
     applyTheme();
-
-    console.log("Theme changed to:", theme);
-    document.title = "theme: " + theme + " | saved: " + localStorage.getItem("theme");
 });
 
-applyTheme();
+
 
 
 // assignment 2: from here and below 
@@ -106,9 +103,9 @@ async function loadQuote() {
 
   }
 }
+
+
 ///
-
-
 
 function renderProjects(list) {
   const container = document.querySelector(".projects");
@@ -153,7 +150,6 @@ container.appendChild(card);
   });
 }
 
-
 const projects = [
         {
         name: "KFUPM Bachelor",
@@ -172,6 +168,86 @@ const projects = [
         linkText: "for the CURIOUS",
         image: "assets/images/artPicture.png",
         category: "creative"
+        },
+
+       {
+        name: "Sample: Weather Dashboard",
+        description: "Sample entry for demonstration: a small page that would show the forecast for a chosen city.",
+        link: "https://example.com",
+        linkText: "Example link",
+        image: "assets/images/kfupmPicture.png",
+        category: "web"
+        },
+        {
+        name: "Sample: Study Planner",
+        description: "Sample entry for demonstration: a weekly planner for course deadlines.",
+        link: "https://example.com",
+        linkText: "Example link",
+        image: "assets/images/kfupmPicture.png",
+        category: "academic"
+        },
+        {
+        name: "Sample: Sketchbook Gallery",
+        description: "Sample entry for demonstration: a gallery of hand-drawn sketches.",
+        link: "https://example.com",
+        linkText: "Example link",
+        image: "assets/images/artPicture.png",
+        category: "creative"
+        },
+        {
+        name: "Sample: Recipe Finder",
+        description: "Sample entry for demonstration: a searchable list of simple recipes.",
+        link: "https://example.com",
+        linkText: "Example link",
+        image: "assets/images/artPicture.png",
+        category: "web"
         }
 ];
 
+
+
+function updateProjects() {
+
+    // Read  values
+    const category = document.getElementById("categoryFilter").value;
+    const sortOrder = document.getElementById("sortOrder").value;
+
+    // Filter 
+    let filteredProjects = projects.filter(function (project) {
+
+        if (category === "all") {
+            return true;
+        }
+
+        return project.category === category;
+    });
+
+    // Sort 
+    filteredProjects = [...filteredProjects].sort(function (a, b) {
+
+        if (sortOrder === "asc") {
+            return a.name.localeCompare(b.name);
+        }
+
+        return b.name.localeCompare(a.name);
+    });
+
+
+    if (filteredProjects.length === 0) {
+        document.querySelector(".projects").textContent =
+            "No projects found. Try another category!";
+        return;
+    }
+
+    // Display projects
+    renderProjects(filteredProjects);
+}
+
+applyTheme();
+updateProjects();
+
+const categoryFilter = document.getElementById("categoryFilter");
+const sortOrder = document.getElementById("sortOrder");
+
+categoryFilter.addEventListener("change", updateProjects);
+sortOrder.addEventListener("change", updateProjects);
