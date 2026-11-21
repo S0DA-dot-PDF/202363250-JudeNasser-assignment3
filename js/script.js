@@ -1,8 +1,11 @@
-
 /* Jude Nasser - 202363250 - SWE 363 Assignment 1
    Night mode button. No colours in here - this only flips the
-   data-theme attribute and the CSS does the rest.
-*/
+   data-theme attribute and the CSS does the rest. */
+import { useState, useEffect } from "react";
+
+const toggle = document.querySelector("#themeToggle");
+const root = document.documentElement;   // this is <html>
+
 
 import { useState, useEffect } from "react";
 
@@ -10,33 +13,36 @@ function ThemeToggle() {
 
     // Store the current theme
     const [theme, setTheme] = useState(
-        localStorage.getItem("theme") || "Light"
-    );
+        localStorage.getItem("theme") || "Light");
 
-    // Save and apply the theme whenever it changes
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
-    }, [theme]);
+    // Save the theme whenever it changes
+    useEffect(   () => {   localStorage.setItem("theme", theme);}, [theme] ); 
 
     // Switch between Light and Dark
     function toggleTheme() {
         setTheme(theme === "Light" ? "Dark" : "Light");
+        console.log("Theme changed to:", theme === "Light" ? "Dark" : "Light");
     }
 
-    return (
-        <button
-            id="themeToggle"
-            onClick={toggleTheme}
-            aria-pressed={theme === "Dark"}
-        >
-            {theme === "Light" ? "Night mode" : "Day mode"}
-        </button>
-    );
+      return (
+              <button
+                  id="themeToggle"
+                  onClick={toggleTheme}
+                  aria-pressed={theme === "Dark"}
+              >
+                  {theme === "Light" ? "Night mode" : "Day mode"}
+              </button>
+          );
 }
 
 
-// Assignment 2: Contact Form
+
+
+
+// assignment 2: from here and below 
+
+
+import { useState } from "react";
 
 function ContactForm() {
 
@@ -52,7 +58,6 @@ function ContactForm() {
     const [greetingMessage, setGreetingMessage] = useState(
         savedName ? `Welcome back, ${savedName}!` : ""
     );
-
     const [errorMessage, setErrorMessage] = useState("");
 
     // Handle form submission
@@ -122,4 +127,8 @@ function ContactForm() {
     );
 }
 
-export { ThemeToggle, ContactForm };
+export default ContactForm;
+
+
+
+
