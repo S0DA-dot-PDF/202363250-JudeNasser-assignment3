@@ -1,134 +1,74 @@
 /* Jude Nasser - 202363250 - SWE 363 Assignment 1
    Night mode button. No colours in here - this only flips the
    data-theme attribute and the CSS does the rest. */
-import { useState, useEffect } from "react";
 
 const toggle = document.querySelector("#themeToggle");
 const root = document.documentElement;   // this is <html>
 
+toggle.addEventListener("click", function () {
+  // getAttribute gives "dark" or null
+  const isDark = root.getAttribute("data-theme") === "dark";
 
-import { useState, useEffect } from "react";
-
-function ThemeToggle() {
-
-    // Store the current theme
-    const [theme, setTheme] = useState(
-        localStorage.getItem("theme") || "Light");
-
-    // Save the theme whenever it changes
-    useEffect(   () => {   localStorage.setItem("theme", theme);}, [theme] ); 
-
-    // Switch between Light and Dark
-    function toggleTheme() {
-        setTheme(theme === "Light" ? "Dark" : "Light");
-        console.log("Theme changed to:", theme === "Light" ? "Dark" : "Light");
-    }
-
-      return (
-              <button
-                  id="themeToggle"
-                  onClick={toggleTheme}
-                  aria-pressed={theme === "Dark"}
-              >
-                  {theme === "Light" ? "Night mode" : "Day mode"}
-              </button>
-          );
-}
-
-
-
+  if (isDark) {
+    root.removeAttribute("data-theme");   // back to light
+    toggle.textContent = "Night mode";
+    toggle.setAttribute("aria-pressed", "false");
+  } else {
+    root.setAttribute("data-theme", "dark");
+    toggle.textContent = "Day mode";
+    toggle.setAttribute("aria-pressed", "true");
+  }
+  // label says what the next click does, not what mode you're in
+});
 
 
 // assignment 2: from here and below 
 
 
-import { useState } from "react";
+const contactForm = document.getElementById("contactForm");
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const messageInput = document.getElementById("message");
+const greetingMessage = document.getElementById("greetingMessage");
+const errorMessage = document.getElementById("errorMessage");
 
-function ContactForm() {
+// Greet returning users who already have a saved name
+const savedName = localStorage.getItem("name");
 
-    // Retrieve the saved name
-    const savedName = localStorage.getItem("name") || "";
-
-    // Store form values
-    const [name, setName] = useState(savedName);
-    const [phone, setPhone] = useState("");
-    const [message, setMessage] = useState("");
-
-    // Store feedback messages
-    const [greetingMessage, setGreetingMessage] = useState(
-        savedName ? `Welcome back, ${savedName}!` : ""
-    );
-    const [errorMessage, setErrorMessage] = useState("");
-
-    // Handle form submission
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        // Clear previous messages
-        setErrorMessage("");
-        setGreetingMessage("");
-
-        const trimmedName = name.trim();
-        const trimmedPhone = phone.trim();
-        const trimmedMessage = message.trim();
-
-        // Validate the fields
-        if (!trimmedName || !trimmedPhone || !trimmedMessage) {
-            setErrorMessage("Please fill in all fields.");
-            return;
-        }
-
-        // Validate Saudi phone number
-        if (!/^(05\d{8}|\+9665\d{8})$/.test(trimmedPhone)) {
-            setErrorMessage("Please enter a valid Saudi phone number.");
-            return;
-        }
-
-        // Save the name only after successful validation
-        localStorage.setItem("name", trimmedName);
-
-        // Greet the user immediately
-        setGreetingMessage(`Welcome, ${trimmedName}!`);
-    }
-
-    return (
-        <form id="contactForm" onSubmit={handleSubmit}>
-
-            <label htmlFor="name">Name</label>
-            <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-            />
-
-            <label htmlFor="phone">Phone Number</label>
-            <input
-                id="phone"
-                type="tel"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-                placeholder="05XXXXXXXX"
-            />
-
-            <label htmlFor="message">Message</label>
-            <textarea
-                id="message"
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-            />
-
-            <button type="submit">Submit</button>
-
-            <p id="greetingMessage">{greetingMessage}</p>
-            <p id="errorMessage">{errorMessage}</p>
-
-        </form>
-    );
+if (savedName) {
+    greetingMessage.textContent = `Welcome back, ${savedName}!`;
+    nameInput.value = savedName;
 }
 
-export default ContactForm;
+// Handle form submission
 
+contactForm.addEventListener("submit", function (event) {
+    event.preventDefault();
 
+    // Clear 
+    errorMessage.textContent = "";
+    greetingMessage.textContent = "";
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
+
+    // Validate the fields
+    if (!name || !email || !message) {
+        errorMessage.textContent = "Please fill in all fields.";
+        return;
+    }
+
+    if (!emailInput.validity.valid) {
+        errorMessage.textContent = "Please enter a valid email address.";
+        return;
+    }
+
+    // Save the name only after successful validation
+    localStorage.setItem("name", name);
+
+    // Greet the user immediately
+    greetingMessage.textContent = `Welcome, ${name}!`;
+});
 
 
